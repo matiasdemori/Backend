@@ -1,60 +1,114 @@
 /** AFTER 1 - PRIMER DESAFIO ENTREGABLE **/
 
+const fs = require('fs');
+
 class ProductManager {
-    static ultId = 0;
-    constructor() {
-        // Inicialización del arreglo de productos y el contador de id
-        this.products = [];
-        //Inicializo una variable estatica donde guardare el ultimo ID Asignado: 
+    static ultId = 0; //Se declara una variable estática inicializada en 0. See utiliza para asignar un identificador único a cada producto.
+    constructor(path) {
+        this.products = []; //Este array se utilizará para almacenar los productos. Se inicializa vacio. 
+        this.path = path; //Representa la ruta del archivo donde se guardarán los datos de los productos.
+    }
+
+    async init() {
+        try { //Se utiliza para manejar errores potenciales que pueden ocurrir durante la ejecución del código dentro de este bloque.
+            if (fs.existsSync(this.path)) { //Verifico si el archivo especificado existe en el sistema de archivos.
+                const productsData = await fs.promises.readFile(this.path, 'utf-8'); //Si el archivo existe, leo su contenido y lo grabo.
+                this.products = JSON.parse(productsData); //Convierto los datos del archivo en un array de objetos que representan productos.
+                // Obtener el último id para continuar la secuencia de ids
+                const lastProduct = this.products[this.products.length - 1];
+                ProductManager.ultId = lastProduct ? lastProduct.id : 0;
+            } else {
+                await fs.promises.writeFile(this.path, '[]', 'utf-8');
+            }
+        } catch (error) {
+            console.error("Error initializing ProductManager:", error);
         }
+    }
 
-    addProduct(title, description, price, thumbnail, code, stock) {
-        // Valido que todos los campos sean obligatorios
-        if (!title || !description || !price || !thumbnail || !code || !stock) {
-            console.log("All fields are mandatory..");
-            return;
+    async addProduct(title, description, price, thumbnail, code, stock) {
+        try {
+            if (!title || !description || !price || !thumbnail || !code || !stock) {
+                console.log("All fields are mandatory..");
+                return;
+            }
+            if (this.products.some(product => product.code === code)) {
+                console.log("A product with that code already exists.");
+                return;
+            }
+
+            const newProduct = {
+                id: ++ProductManager.ultId,
+                title: title,
+                description: description,
+                price: price,
+                thumbnail: thumbnail,
+                code: code,
+                stock: stock
+            };
+
+            this.products.push(newProduct);
+            await this.saveToFile();
+            console.log("Product added successfully.");
+        } catch (error) {
+            console.error("Error adding product:", error);
         }
-        // Valido que no se repita el campo "code"
-        if (this.products.some(product => product.code === code)) {
-            console.log("A product with that code already exists.");
-            return;
+    }
+
+    async getProducts() {
+        try {
+            return this.products;
+        } catch (error) {
+            console.error("Error getting products:", error);
+            return [];
         }
+    }
 
-    // Creo un nuevo objeto con un id autoincrementable
-    const newProduct = {
-        id: ++ProductManager.ultId, 
-        title: title,
-        description: description,
-        price: price,
-        thumbnail: thumbnail,
-        code: code,
-        stock: stock
-    };
+    async getProductById(id) {
+        try {
+            const product = this.products.find(product => product.id === id);
+            if (product) {
+                console.log("Product found:", product);
+            } else {
+                console.log("Product not found.");
+            }
+        } catch (error) {
+            console.error("Error getting product by id:", error);
+        }
+    }
 
-    // Agrego el nuevo producto al arreglo de productos
-    this.products.push(newProduct);
-    console.log("Product added successfully.");
-}
-
-
-getProducts() {
-    // Devuelve el arreglo de productos
-    return this.products;
-}
-
-getProductById(id) {
-    // Busca un producto por su id en el arreglo de productos
-    const product = this.products.find(product => product.id === id);
-    if (product) {
-        // Si encuentra el producto, lo devuelve
-        console.log("Product found" , product);;
-    } else {
-        // Si no se encuentra, muestra un mensaje de error
-        console.log("not found.");
+    async saveToFile() {
+        try {
+            await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 2), 'utf-8');
+        } catch (error) {
+            console.error("Error saving to file:", error);
+        }
     }
 }
+
+async function generateRandomProductsJSON(filename, numProducts) {
+    try {
+        const products = [];
+        for (let i = 1; i <= numProducts; i++) {
+            const product = {
+                id: i,
+                title: `Product ${i}`,
+                description: `Description of Product ${i}`,
+                price: Math.floor(Math.random() * 100) + 1,
+                thumbnail: `path/to/thumbnail_${i}.jpg`,
+                code: `P${i}`,
+                stock: Math.floor(Math.random() * 100) + 1
+            };
+            products.push(product);
+        }
+        await fs.promises.writeFile(filename, JSON.stringify(products, null, 2), 'utf-8');
+        console.log(`Generated ${numProducts} products and saved to ${filename}.`);
+    } catch (error) {
+        console.error("Error generating random products:", error);
+    }
 }
-   
+
+
+
 
 // Testing:
 
