@@ -10,7 +10,7 @@ class ProductManager {
     async init() {
         try { //Se utiliza para manejar errores potenciales que pueden ocurrir durante la ejecución del código dentro de este bloque.
             if (!fs.existsSync(this.path)) { //Verifico si el archivo especificado existe en el sistema de archivos.
-                await fs.promises.writeFile(this.path, '[]', 'utf-8');
+                await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
             } else {
                 const productsData = await fs.promises.readFile(this.path, 'utf-8');//Si el archivo existe, leo su contenido y lo grabo.
                 this.products = JSON.parse(productsData);//Convierto los datos del archivo en un array de objetos que representan productos.
@@ -25,35 +25,42 @@ class ProductManager {
 
     async addProduct(title, description, price, thumbnail, code, stock) {
         try {
-
+            // Verifico si algún campo obligatorio está vacío
             if (!title || !description || !price || !thumbnail || !code || !stock) {
                 console.log("All fields are mandatory..");
-                return; // Verifico si alguno de los parámetros requeridos está vacío o es nulo. Si alguno de ellos lo es, muestro un mensaje de error en la consola.
+                return; // Si falta algún campo obligatorio, mostrar un mensaje y salir del método
             }
-
+    
+            // Verifico si ya existe un producto con el mismo código
             if (this.products.some(product => product.code === code)) {
                 console.log("A product with that code already exists.");
-                return; // Verifico si ya existe un producto con el mismo código. Si es así, muestro un mensaje de error.
+                return; // Si ya existe un producto con el mismo código, mostrar un mensaje y salir del método
             }
-
+    
+            // Creo un nuevo objeto que representa el producto a agregar
             const newProduct = {
-                id: ++ProductManager.ultId,
+                id: ++ProductManager.ultId, // Generar un nuevo ID único para el producto
                 title: title,
                 description: description,
                 price: price,
                 thumbnail: thumbnail,
                 code: code,
                 stock: stock
-            }; // Con esto creo un nuevo objeto que representa el producto a agregar. Tiene ID único que se genera incrementando el valor de la variable estática ultId de la clase.
-
-            this.products.push(newProduct); // Agrega el nuevo producto newProduct al array this.products.
-            await fs.promises.appendFile(this.path, JSON.stringify(newProduct), 'utf-8');
+            };
+    
+            // Agrego el nuevo producto al array this.products
+            this.products.push(newProduct);
+    
+            // Escribo el array completo de productos en el archivo
+            await fs.promises.writeFile(this.path, JSON.stringify(this.products), 'utf-8');
+    
             console.log("Product added successfully.");
         } catch (error) {
             console.error("Error adding product:", error);
-        } // Agrego un nuevo producto al array de productos, y muestra un mensaje indicando que el producto se ha agregado con éxito. Si ocurre algún error, se captura y se imprime un mensaje de error en la consola.
+        }
     }
-
+    
+ 
     async getProducts() {
         try {
             // Leer los datos del archivo
@@ -84,14 +91,6 @@ class ProductManager {
             }
         } catch (error) {
             console.error("Error getting product by id:", error);
-        }
-    }
-
-    async saveToFile() {
-        try {
-            await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 2), 'utf-8');
-        } catch (error) {
-            console.error("Error saving to file:", error);
         }
     }
 
