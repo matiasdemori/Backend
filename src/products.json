@@ -1,0 +1,92 @@
+[
+    {
+        "id": 1,
+        "title": "Arroz Blanco",
+        "description": "Arroz de grano largo ideal para acompañar platos principales.",
+        "price": 2.5,
+        "thumbnail": "https://example.com/arroz-blanco.jpg",
+        "code": "A001",
+        "stock": 100
+    },
+    {
+        "id": 2,
+        "title": "Leche Entera",
+        "description": "Leche fresca de vaca entera, rica en calcio y nutrientes.",
+        "price": 3.75,
+        "thumbnail": "https://example.com/leche-entera.jpg",
+        "code": "A002",
+        "stock": 50
+    },
+    {
+        "id": 3,
+        "title": "Pan Integral",
+        "description": "Pan de trigo integral, saludable y rico en fibra.",
+        "price": 1.8,
+        "thumbnail": "https://example.com/pan-integral.jpg",
+        "code": "A003",
+        "stock": 80
+    },
+    {
+        "id": 4,
+        "title": "Yogur Natural",
+        "description": "Yogur natural sin azúcar, perfecto para acompañar cereales o frutas.",
+        "price": 2.0,
+        "thumbnail": "https://example.com/yogur-natural.jpg",
+        "code": "A004",
+        "stock": 60
+    },
+    {
+        "id": 5,
+        "title": "Huevos Frescos",
+        "description": "Docena de huevos frescos de gallinas criadas en libertad.",
+        "price": 4.5,
+        "thumbnail": "https://example.com/huevos-frescos.jpg",
+        "code": "A005",
+        "stock": 40
+    },
+    {
+        "id": 6,
+        "title": "Aceite de Oliva Virgen Extra",
+        "description": "Aceite de oliva de primera calidad, prensado en frío.",
+        "price": 5.0,
+        "thumbnail": "https://example.com/aceite-oliva.jpg",
+        "code": "A006",
+        "stock": 30
+    },
+    {
+        "id": 7,
+        "title": "Café Molido",
+        "description": "Café colombiano molido, de sabor intenso y aromático.",
+        "price": 6.2,
+        "thumbnail": "https://example.com/cafe-molido.jpg",
+        "code": "A007",
+        "stock": 70
+    },
+    {
+        "id": 8,
+        "title": "Azúcar Blanca",
+        "description": "Azúcar refinada blanca, ideal para endulzar bebidas y postres.",
+        "price": 1.0,
+        "thumbnail": "https://example.com/azucar-blanca.jpg",
+        "code": "A008",
+        "stock": 90
+    },
+    {
+        "id": 9,
+        "title": "Pasta Corta",
+        "description": "Pasta corta tipo penne rigate, perfecta para preparar platos de pasta.",
+        "price": 1.5,
+        "thumbnail": "https://example.com/pasta-corta.jpg",
+        "code": "A009",
+        "stock": 120
+    },
+    {
+        "id": 10,
+        "title": "Tomate en Conserva",
+        "description": "Tomate pelado y en conserva, listo para usar en salsas y guisos.",
+        "price": 1.75,
+        "thumbnail": "https://example.com/tomate-conserva.jpg",
+        "code": "A010",
+        "stock": 110
+    }
+]

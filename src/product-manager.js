@@ -85,7 +85,7 @@ class ProductManager {
             const product = products.find(product => product.id === id);
 
             if (product) {
-                console.log("Product found:", product);
+                return product;
             } else {
                 console.log("Product not found.");
             }
@@ -145,100 +145,4 @@ class ProductManager {
     }
 }
 
-// Testing:
-
-// 1) Crear una instancia de la clase "ProductManager"
-const { error } = require("console");
-const misProductos = './productos.json';
-const productManager = new ProductManager(misProductos);
-
-// 2) Llamar a "getProducts" inmediatamente después de crear la instancia, debería devolver un arreglo vacío []
-(async () => {
-    try {
-        const productos = await productManager.getProducts();
-        console.log("Productos obtenidos:", productos);
-    } catch (error) {
-        console.error("Error al obtener productos:", error);
-    }
-})();
-
-// 3) Llamar al método "addProduct" con los siguientes campos:
-(async () => {
-    try {
-        await productManager.addProduct(
-            "producto prueba",
-            "Este es un producto prueba",
-            200,
-            "Sin imagen",
-            "abc123",
-            25
-        );
-    } catch (error) {
-        console.error("Error al agregar producto:", error);
-    }
-})();
-
-// 4) Agregar otro producto
-(async () => {
-    try {
-        await productManager.addProduct(
-            "otro producto",
-            "Este es otro producto de prueba",
-            150,
-            "Sin imagen",
-            "xyz456",
-            30
-        );
-    } catch (error) {
-        console.error("Error al agregar otro producto:", error);
-    }
-})();
-
-// 5) Obtener todos los productos, incluido el recién agregado
-(async () => {
-    try {
-        const productos = await productManager.getProducts();
-        console.log("Productos actuales:", productos);
-    } catch (error) {
-        console.error("Error al obtener productos actuales:", error);
-    }
-})();
-
-// 6) Obtener el producto por su ID (debería encontrarlo) y obtener un producto con un ID que no existe (debería fallar)
-(async () => {
-    try {
-        console.log("Buscando producto existente:");
-        await productManager.getProductById(1);
-
-        console.log("Buscando producto inexistente:");
-        await productManager.getProductById(999);
-    } catch (error) {
-        console.error("Error al buscar producto por ID:", error);
-    }
-})();
-
-// 7) Actualizar el producto recién agregado y obtener el producto actualizado
-(async () => {
-    try {
-        console.log("\nActualizando el producto:");
-        await productManager.updateProduct(1, { price: 250 });
-
-        console.log("\nBuscando producto actualizado:");
-        await productManager.getProductById(1);
-    } catch (error) {
-        console.error("Error al actualizar producto:", error);
-    }
-})();
-
-// 8) Eliminar un producto existente e intentar eliminar un producto que no existe
-(async () => {
-    try {
-        console.log("Eliminando producto con ID 2:");
-        await productManager.deleteProduct(2);
-
-        console.log("Intentando eliminar producto con ID 10 (que no existe):");
-        await productManager.deleteProduct(10);
-    } catch (error) {
-        console.error("Error al eliminar producto:", error);
-    }
-})();
+module.exports = ProductManager; // Exportar la clase ProductManager
