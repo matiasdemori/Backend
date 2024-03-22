@@ -1,9 +1,9 @@
 const fs = require('fs');
 
 class ProductManager {
-    static ultId = 0; //Se declara una variable estática inicializada en 0. See utiliza para asignar un identificador único a cada producto.
+    static ultId = 0; //Declaro una variable estática que inicia en 0. La utilizo para asignar un id único a cada producto.
     constructor(path) {
-        this.products = []; //Este array se utilizará para almacenar los productos. Se inicializa vacio. 
+        this.products = []; //Este array se utiliza para almacenar los productos. Se inicializa vacio. 
         this.path = path; //Representa la ruta del archivo donde se guardarán los datos de los productos.
     }
 
@@ -23,10 +23,10 @@ class ProductManager {
         }
     }//Con esta función busco que el ProductManager esté listo, cargando los productos almacenados desde un archivo si ya existen, o creando un archivo nuevo si no existe.
 
-    async addProduct(title, description, price, thumbnail, code, stock) {
+    async addProduct(title, description, price, img, code, stock, category, thumbnails) {
         try {
             // Verifico si algún campo obligatorio está vacío
-            if (!title || !description || !price || !thumbnail || !code || !stock) {
+            if (!title || !description || !price || !img || !code || !stock || !category || !thumbnails) {
                 console.log("All fields are mandatory..");
                 return; // Si falta algún campo obligatorio, mostrar un mensaje y salir del método
             }
