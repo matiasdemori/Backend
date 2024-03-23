@@ -23,54 +23,76 @@ class ProductManager {
         }
     }//Con esta función busco que el ProductManager esté listo, cargando los productos almacenados desde un archivo si ya existen, o creando un archivo nuevo si no existe.
 
+
     async addProduct(title, description, price, img, code, stock, category, thumbnails) {
         try {
+            // Leo el archivo JSON para obtener los productos existentes
+            const existingProducts = await fs.promises.readFile(this.path, 'utf-8');
+            const productsArray = JSON.parse(existingProducts);
+    
+            // Obtengo el último ID guardado en el archivo de productos y aumento en 1
+            const lastProductId = productsArray.length > 0 ? productsArray[productsArray.length - 1].id : 0;
+            const newId = lastProductId + 1;
+    
             // Verifico si algún campo obligatorio está vacío
-            if (!title || !description || !price || !img || !code || !stock || !category || !thumbnails) {
-                console.log("All fields are mandatory..");
-                return; // Si falta algún campo obligatorio, mostrar un mensaje y salir del método
+            if (!title || !description || !price || !img || !code || !stock || !category || !thumbnails || !Array.isArray(thumbnails)) {
+                throw new Error("All fields are mandatory, and thumbnails must be an array of strings.");
+            }
+    
+            // Verifico el tipo de dato de cada campo
+            if (typeof title !== 'string' ||
+                typeof description !== 'string' ||
+                typeof price !== 'number' ||
+                typeof img !== 'string' ||
+                typeof code !== 'string' ||
+                typeof stock !== 'number' ||
+                typeof category !== 'string' ||
+                !thumbnails.every(thumbnail => typeof thumbnail === 'string')) {
+                throw new Error("Invalid data type for one or more fields, or thumbnails is not an array of strings.");
             }
     
             // Verifico si ya existe un producto con el mismo código
-            if (this.products.some(product => product.code === code)) {
-                console.log("A product with that code already exists.");
-                return; // Si ya existe un producto con el mismo código, mostrar un mensaje y salir del método
+            if (productsArray.some(product => product.code === code)) {
+                throw new Error("A product with that code already exists.");
             }
     
             // Creo un nuevo objeto que representa el producto a agregar
             const newProduct = {
-                id: ++ProductManager.ultId, // Generar un nuevo ID único para el producto
+                id: newId,
                 title: title,
                 description: description,
                 price: price,
-                thumbnail: thumbnail,
+                img: img,
+                category: category,
+                thumbnail: thumbnails,
                 code: code,
-                stock: stock
+                stock: stock,
+                status: true // Establecer el campo status como true por defecto
             };
     
-            // Agrego el nuevo producto al array this.products
-            this.products.push(newProduct);
+            // Agrego el nuevo producto al array de productos
+            productsArray.push(newProduct);
     
             // Escribo el array completo de productos en el archivo
-            await fs.promises.writeFile(this.path, JSON.stringify(this.products), 'utf-8');
+            await fs.promises.writeFile(this.path, JSON.stringify(productsArray), 'utf-8');
     
             console.log("Product added successfully.");
         } catch (error) {
             console.error("Error adding product:", error);
+            throw error; // Relanzar el error para capturarlo en el enrutador
         }
     }
-    
- 
+  
     async getProducts() {
         try {
-            // Leer los datos del archivo
+            // Leo los datos del archivo
             const productsData = await fs.promises.readFile(this.path, 'utf-8');
-            // Analizar los datos como un JSON para obtener los productos
+            // Analizo los datos como un JSON para obtener los productos
             const products = JSON.parse(productsData);
-            return products;
+            return products; //Devuelvo el array de productos
         } catch (error) {
             console.error("Error getting products:", error);
-            return []; // En caso de error, devolver un array vacío
+            return []; // En caso de error, devuelvo un array vacío
         }
     }
 

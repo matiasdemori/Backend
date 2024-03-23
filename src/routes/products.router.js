@@ -43,11 +43,13 @@ router.get('/products/:pid', async (req, res) => {
 router.post("/products", async (req, res) => {
     const nuevoProducto = req.body; // Obtengo el nuevo producto del body
 
+    const { title, description, price, img, code, stock, category, thumbnails } = nuevoProducto; // Desestructuro el objeto para obtener cada propiedad
+
     try {
-        await productManager.addProduct(nuevoProducto); // Agrego el nuevo producto
-        res.status(201).json({message: "Product added successfully"}); // Si todo sale bien mando un ok.
+        await productManager.addProduct(title, description, price, img, code, stock, category, thumbnails); // Paso cada propiedad por separado a addProduct
+        res.status(201).json({ message: "Product added successfully" }); // Si todo sale bien mando un ok.
     } catch (error) {
-        res.status(500).json({error: "Internal server error"}); // Si sale mal, sale el mensaje de error. 
+        res.status(400).json({ error: error.message }); // Capturo y envio el mensaje de error al cliente en Postman
     }
 })
 
@@ -57,23 +59,26 @@ router.put("/products/:pid", async (req, res) => {
     const productoActualizado = req.body; // Obtengo del body los datos del producto a actualizar.
 
     try {
-        await productManager.updateProduct(parseInt(id), productoActualizado); // Busco actualizar el producto.
+        await productManager.updateProduct(parseInt(id), productoActualizado); // Intento actualizar el producto
+
         res.json({ message: "Product updated successfully" }); // Si todo sale bien mando un ok.
     } catch (error) {
-        res.status(500).json({error: "Internal server error"}); // Si sale mal, sale el mensaje de error. 
+        // Si se lanzó un error durante la actualización, enviar el mensaje de error al cliente
+        res.status(400).json({ error: error.message });
     }
 })
 
 // Eliminar producto:
 router.delete("/products/:pid", async (req, res) => {
-    const id = req.params.pid; // Obtengo por parametro el id a eliminar
+    const id = req.params.pid; // Obtengo por parámetro el id a eliminar
 
     try {
-        await productManager.deleteProduct(parseInt(id)); // Busco eliminar el producto
+        await productManager.deleteProduct(parseInt(id)); // Intento eliminar el producto
+
         res.json({ message: "Product deleted successfully" }); // Si todo sale bien mando un ok.
     } catch (error) {
-        res.status(500).json({error: "Internal server error"}); // Si sale mal, sale el mensaje de error. 
+        // Si se lanzó un error durante la eliminación, enviar el mensaje de error al cliente
+        res.status(400).json({ error: error.message });
     }
 })
-
 module.exports = router;
