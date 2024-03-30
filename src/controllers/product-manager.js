@@ -35,8 +35,8 @@ class ProductManager {
             const newId = lastProductId + 1;
     
             // Verifico si algún campo obligatorio está vacío
-            if (!title || !description || !price || !img || !code || !stock || !category || !thumbnails || !Array.isArray(thumbnails)) {
-                throw new Error("All fields are mandatory, and thumbnails must be an array of strings.");
+            if (!title || !description || !price || !img || !code || !stock || !category) {
+                throw new Error("All fields are mandatory");
             }
     
             // Verifico el tipo de dato de cada campo
@@ -46,9 +46,8 @@ class ProductManager {
                 typeof img !== 'string' ||
                 typeof code !== 'string' ||
                 typeof stock !== 'number' ||
-                typeof category !== 'string' ||
-                !thumbnails.every(thumbnail => typeof thumbnail === 'string')) {
-                throw new Error("Invalid data type for one or more fields, or thumbnails is not an array of strings.");
+                typeof category !== 'string') {
+                throw new Error("Invalid data type for one or more fields");
             }
     
             // Verifico si ya existe un producto con el mismo código
