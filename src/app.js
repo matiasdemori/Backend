@@ -1,7 +1,7 @@
-const express = require('express'); 
-const fs = require('fs').promises; 
-const productsRouter = require("./routes/products.router.js"); 
-const cartsRouter = require("./routes/carts.router.js"); 
+const express = require('express');
+const fs = require('fs').promises;
+const productsRouter = require("./routes/products.router.js");
+const cartsRouter = require("./routes/carts.router.js");
 const exphbs = require("express-handlebars");
 const socket = require("socket.io");
 const viewsRouter = require("./routes/views.router.js");
@@ -11,7 +11,7 @@ const PORT = 8080; // Coloco el puerto donde se alojara el servidor
 
 // Middlewares para manejar el formato JSON, datos de formulario y otro para la carpeta estatica de public.
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./src/public"));
 
 //Configuracion de Handlebars
@@ -29,7 +29,7 @@ app.use("/", viewsRouter);
 
 // Iniciar el servidor y escuchar en el puerto definido
 const httpServer = app.listen(PORT, () => {
-    console.log(`Express server listening on port ${PORT}`); 
+    console.log(`Express server listening on port ${PORT}`);
 });
 
 // Iniciar el servidor de socket.io con el servidor HTTP
@@ -55,7 +55,8 @@ io.on("connection", async (socket) => {
 
     //Recibo el evento "agregarProducto" desde el cliente: 
     socket.on("agregarProducto", async (producto) => {
-        await productManager.addProduct(producto);
+        const { title, description, price, img, code, stock, category, thumbnails } = producto;
+        await productManager.addProduct(title, description, price, img, code, stock, category, thumbnails);
         socket.emit("productos", await productManager.getProducts());
     })
 })

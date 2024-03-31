@@ -29,16 +29,17 @@ class ProductManager {
             // Leo el archivo JSON para obtener los productos existentes
             const existingProducts = await fs.promises.readFile(this.path, 'utf-8');
             const productsArray = JSON.parse(existingProducts);
-    
+
             // Obtengo el último ID guardado en el archivo de productos y aumento en 1
             const lastProductId = productsArray.length > 0 ? productsArray[productsArray.length - 1].id : 0;
             const newId = lastProductId + 1;
-    
+
+
             // Verifico si algún campo obligatorio está vacío
             if (!title || !description || !price || !img || !code || !stock || !category) {
                 throw new Error("All fields are mandatory");
             }
-    
+
             // Verifico el tipo de dato de cada campo
             if (typeof title !== 'string' ||
                 typeof description !== 'string' ||
@@ -49,12 +50,12 @@ class ProductManager {
                 typeof category !== 'string') {
                 throw new Error("Invalid data type for one or more fields");
             }
-    
+
             // Verifico si ya existe un producto con el mismo código
             if (productsArray.some(product => product.code === code)) {
                 throw new Error("A product with that code already exists.");
             }
-    
+
             // Creo un nuevo objeto que representa el producto a agregar
             const newProduct = {
                 id: newId,
@@ -68,20 +69,20 @@ class ProductManager {
                 stock: stock,
                 status: true // Establecer el campo status como true por defecto
             };
-    
+
             // Agrego el nuevo producto al array de productos
             productsArray.push(newProduct);
-    
+
             // Escribo el array completo de productos en el archivo
             await fs.promises.writeFile(this.path, JSON.stringify(productsArray), 'utf-8');
-    
+
             console.log("Product added successfully.");
         } catch (error) {
             console.error("Error adding product:", error);
             throw error; // Relanzar el error para capturarlo en el enrutador
         }
     }
-  
+
     async getProducts() {
         try {
             // Leo los datos del archivo
