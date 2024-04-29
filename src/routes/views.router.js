@@ -24,5 +24,11 @@ router.get("/realtimeproducts", (req, res) => {
     res.render("realtimeproducts");
 });
 
+// Ruta para el chat
+router.get("/chat", (req, res) => {
+    // Renderizo los chats
+    res.render("chat");
+});
+
 // Exportar el enrutador para ser utilizado en la aplicación principal
 module.exports = router;

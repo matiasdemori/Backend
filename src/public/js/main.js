@@ -19,7 +19,7 @@ const renderProductos = (productos) => {
         const card = document.createElement("div");
         // Establezco el HTML interno de la tarjeta del producto utilizando una plantilla de cadena de texto.
         card.innerHTML = `
-                            <p> ID: ${item.id} </p>
+                            <p> ID: ${item._id} </p>
                             <p> Titulo:  ${item.title} </p>
                             <p> Precio: ${item.price} </p>
                             <button> Eliminar producto </button>
@@ -29,14 +29,14 @@ const renderProductos = (productos) => {
         //Agregamos el evento al botón de eliminar producto: 
         //Agrego un evento de clic al botón de "Eliminar producto".
         card.querySelector("button").addEventListener("click", () => {
-            eliminarProducto(item.id)
+            eliminarProducto(item._id)
         })
     })
 }
 
 //Eliminar producto: 
-const eliminarProducto = (id) => {
-    socket.emit("eliminarProducto", id);
+const eliminarProducto = (_id) => {
+    socket.emit("eliminarProducto", _id);
 }
 
 //Agregar producto: 

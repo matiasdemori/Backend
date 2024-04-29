@@ -6,7 +6,7 @@ const router = express.Router();
 const CartManager = require("../controllers/cart-manager.js");
 
 // Creo una instancia de CartManager y especifico la ubicación del archivo JSON.
-const cartManager = new CartManager("./src/models/carts.json");
+const cartManager = new CartManager();
 
 // 1) Ruta para crear un nuevo carrito.
 router.post("/carts", async (req, res) => {
@@ -26,7 +26,7 @@ router.post("/carts", async (req, res) => {
 // 2) Ruta para obtener los productos de un carrito específico.
 router.get("/carts/:cid", async (req, res) => {
     // Obtengo el ID del carrito desde los parámetros de la solicitud.
-    const cartId = parseInt(req.params.cid);
+    const cartId = req.params.cid;
 
     try {
         // Llamo al método getCarritoById de CartManager para obtener el carrito por su ID.
@@ -45,7 +45,7 @@ router.get("/carts/:cid", async (req, res) => {
 // 3) Ruta para agregar productos a un carrito.
 router.post("/carts/:cid/product/:pid", async (req, res) => {
     // Obtengo el ID del carrito y el ID del producto desde los parámetros de la solicitud.
-    const cartId = parseInt(req.params.cid);
+    const cartId = req.params.cid;
     const productId = req.params.pid;
     
     // Obtengo la cantidad del producto desde el cuerpo de la solicitud si no tiene la establezco en 1 por defecto.
