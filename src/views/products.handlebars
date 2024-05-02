@@ -1,0 +1,38 @@
+<h1> Productos </h1>
+
+{{#each productos}}
+<!-- Itero sobre cada producto en la lista "productos" -->
+<div class="card">
+    <p> {{this.title}} </p>
+    <!-- Muestro el título del producto -->
+    <p> {{this.description}} </p>
+    <!-- Muestro la descripción del producto -->
+    <p> {{this.price}} </p>
+    <!-- Muestro el precio del producto -->
+    <p> {{this.img}} </p>
+    <!-- Muestro la imagen del producto -->
+    <p> {{this.category}} </p>
+    <!-- Muestro la categoría del producto -->
+    <p> {{this.code}} </p>
+    <!-- Muestro el código del producto -->
+    <p> {{this.stock}} </p>
+    <!-- Muestro el stock del producto -->
+</div>
+{{/each}}
+
+
+{{#if hasPrevPage}}
+<!-- Compruebo si hay una página anterior disponible -->
+    <a href="/products?page={{prevPage}}"> Anterior </a>
+    <!-- Muestro el enlace a la página anterior -->
+{{/if}}
+
+{{#if hasNextPage}}
+<!-- Compruebo si hay una página siguiente disponible -->
+    <a href="/products?page={{nextPage}}"> Siguiente </a>
+    <!-- Muestro el enlace a la página siguiente -->
+{{/if}} 
+
+<p>Página {{currentPage}} de {{totalPages}} </p>
+<!-- Muestro la información de la página actual y el total de páginas -->
+

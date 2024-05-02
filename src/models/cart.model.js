@@ -20,6 +20,13 @@ const cartSchema = new mongoose.Schema({
     ]
 });
 
+//Middleware de pre, se ejecuta antes de realizar una consulta 'findOne' en el esquema de carrito
+ cartSchema.pre('findOne', function (next) {
+    // Puebla automáticamente el campo 'products.product' del carrito con solo el '_id', 'title' y 'price' del producto asociado
+    this.populate('products.product', '_id title price');
+     next(); // Llamo a la función next para continuar con la ejecución
+ });
+
 // Creo el modelo "CartModel" basado en el esquema "cartSchema"
 const CartModel = mongoose.model("carts", cartSchema);
 

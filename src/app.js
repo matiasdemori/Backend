@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs').promises;
-const exphbs = require("express-handlebars");
-const socket = require("socket.io");
+const exphbs = require("express-handlebars"); 
+const socket = require("socket.io"); 
 require("./database.js");
 
 const productsRouter = require("./routes/products.router.js");

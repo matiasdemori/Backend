@@ -43,25 +43,66 @@ class ProductManager {
         }
     }
 
-    async getProducts(limit) {
+
+    async getProducts({ limit = 10, page = 1, sort, query } = {}) {
         try {
-            // Utilizo el modelo ProductModel para buscar todos los productos en la base de datos
-            let productos;
-            if (limit) {
-                // Si se especifica un límite, obtengo solo la cantidad de productos indicada
-                productos = await ProductModel.find().limit(limit);
-            } else {
-                // Si no se especifica un límite, obtengo todos los productos
-                productos = await ProductModel.find();
+            // Calculo el número de documentos a omitir según la página y el límite de resultados por página
+            const skip = (page - 1) * limit;
+
+            // Opciones de consulta inicialmente vacías
+            let queryOptions = {};
+
+            // Configuro las opciones de consulta según el parámetro de búsqueda (si existe)
+            if (query) {
+                queryOptions = { category: query };
             }
-            // Retorno la lista de productos encontrados
-            return productos;
+
+            // Opciones de ordenamiento inicialmente vacías
+            const sortOptions = {};
+            if (sort) {
+                // Configuro las opciones de ordenamiento según el parámetro de orden (ascendente o descendente)
+                if (sort === 'asc' || sort === 'desc') {
+                    sortOptions.price = sort === 'asc' ? 1 : -1; // Ordeno por precio ascendente (1) o descendente (-1)
+                }
+            }
+
+            // Obtengo los productos según las opciones de consulta, ordenamiento, paginación y límite
+            const productos = await ProductModel
+                .find(queryOptions)
+                .sort(sortOptions)
+                .skip(skip)
+                .limit(limit);
+
+            // Obtengo el total de productos que coinciden con las opciones de consulta
+            const totalProducts = await ProductModel.countDocuments(queryOptions);
+
+            // Calculo el número total de páginas según el límite de productos por página
+            const totalPages = Math.ceil(totalProducts / limit);
+
+            // Determino si hay una página previa y una página siguiente
+            const hasPrevPage = page > 1;
+            const hasNextPage = page < totalPages;
+
+            // Devuelvo la respuesta con los productos, metadatos de paginación y enlaces a páginas previas/siguientes
+            return {
+                docs: productos, // Array de productos
+                totalPages, // Número total de páginas
+                prevPage: hasPrevPage ? page - 1 : null, // Número de página previa (si existe)
+                nextPage: hasNextPage ? page + 1 : null, // Número de página siguiente (si existe)
+                page, // Número de página actual
+                hasPrevPage, // Indicador de página previa
+                hasNextPage, // Indicador de página siguiente
+                prevLink: hasPrevPage ? `/api/products?limit=${limit}&page=${page - 1}&sort=${sort}&query=${query}` : null, // Enlace a la página previa (si existe)
+                nextLink: hasNextPage ? `/api/products?limit=${limit}&page=${page + 1}&sort=${sort}&query=${query}` : null, // Enlace a la página siguiente (si existe)
+            };
+
         } catch (error) {
-            // Capturo cualquier error que ocurra durante la búsqueda de productos, para luego mostrarlo
-            console.log("Error recovering products", error);
+            // Manejo errores en caso de fallo en la consulta
+            console.log("Error obtaining the products", error);
             throw error;
         }
     }
+
 
     async getProductById(id) {
         try {
