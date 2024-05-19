@@ -1,0 +1,20 @@
+<!-- Título de la página de inicio de sesión -->
+<h1>Login</h1>
+
+<!-- Formulario para enviar datos de inicio de sesión al servidor -->
+<form action="/api/sessions/login" method="POST">
+    <!-- Etiqueta para el campo de email -->
+    <label for="email">Email:</label>
+    <!-- Campo de entrada para el email, requerido -->
+    <input type="email" id="email" name="email" required>
+    <br>
+
+    <!-- Etiqueta para el campo de contraseña -->
+    <label for="password">Password:</label>
+    <!-- Campo de entrada para la contraseña, requerido -->
+    <input type="password" id="password" name="password" required>
+    <br>
+
+    <!-- Botón de envío del formulario para iniciar sesión -->
+    <button type="submit">Login</button>
+</form>

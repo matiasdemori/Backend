@@ -93,5 +93,41 @@ router.get("/chat", (req, res) => {
     res.render("chat");
 });
 
-// Exportar el enrutador para ser utilizado en la aplicación principal
+//LOGIN
+
+// Ruta para la página de inicio de sesión
+router.get("/login", (req, res) => {
+    // Verifico si el usuario ya está logueado, de ser asi lo redirijo a la página de productos
+    if (req.session.login) {
+        return res.redirect("/products");
+    }
+
+    // Renderizo la vista de inicio de sesión
+    res.render("login");
+});
+
+// Ruta para el formulario de registro
+router.get("/register", (req, res) => {
+    // Verifico si el usuario ya está logueado y redirige a la página de perfil si es así
+    if (req.session.login) {
+        return res.redirect("/profile");
+    }
+
+    // Renderizo el formulario de registro
+    res.render("register");
+});
+
+// Ruta para la vista de perfil
+router.get("/profile", (req, res) => {
+    // Verifico si el usuario está logueado
+    if (!req.session.login) {
+        // Redirijo al formulario de inicio de sesión si no está logueado
+        return res.redirect("/login");
+    }
+
+    // Renderizo la vista de perfil con los datos del usuario
+    res.render("profile", { user: req.session.user });
+});
+
+// Exporto el enrutador para ser utilizado en la aplicación principal
 module.exports = router;

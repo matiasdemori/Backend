@@ -2,11 +2,14 @@ const express = require('express');
 const fs = require('fs').promises;
 const exphbs = require("express-handlebars"); 
 const socket = require("socket.io"); 
+const session = require("express-session");
 require("./database.js");
 
 const productsRouter = require("./routes/products.router.js");
 const cartsRouter = require("./routes/carts.router.js");
 const viewsRouter = require("./routes/views.router.js");
+const sessionRouter = require("./routes/session.router.js");
+const userRouter = require("./routes/user.router.js");
 
 const app = express(); // Creo una nueva instancia de la aplicación express
 const PORT = 8080; // Coloco el puerto donde se alojara el servidor
@@ -15,6 +18,16 @@ const PORT = 8080; // Coloco el puerto donde se alojara el servidor
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./src/public"));
+
+// Middleware de sesiones en Express
+app.use(session({
+    // Clave secreta utilizada para firmar las cookies de sesión
+    secret: "secretCoder",
+    // Vuelvo a guardar la sesión incluso si no ha cambiado durante la solicitud
+    resave: true,
+    // Guardo una nueva sesión aunque no esté inicializada
+    saveUninitialized: true,
+}))
 
 // Importación de express-handlebars y configuración
 const hbs = exphbs.create({
@@ -37,8 +50,10 @@ app.set("view engine", "handlebars");
 app.set("views", "./src/views");
 
 // Coloco las rutas para los endpoints de productos y carrito
-app.use("/api", productsRouter);
-app.use("/api", cartsRouter);
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartsRouter);
+app.use("/api/users", userRouter);
+app.use("/api/sessions", sessionRouter);
 app.use("/", viewsRouter);
 
 // Inicio el servidor y escuchar en el puerto definido

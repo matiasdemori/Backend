@@ -12,7 +12,6 @@ router.get("/products", async (req, res) => {
     try {
         // Obtengo los parámetros de la consulta (query string) de la solicitud
         const { limit = 10, page = 1, sort, query } = req.query;
-
         // Llamo al método getProducts del gestor de productos para obtener los productos con las opciones especificadas
         const productos = await productManager.getProducts({
             limit: parseInt(limit), // Convierto el límite de resultados a un número entero

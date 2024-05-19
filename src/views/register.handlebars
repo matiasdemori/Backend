@@ -1,0 +1,31 @@
+<!-- Formulario para enviar datos de registro al servidor -->
+<form action="/api/users" method="post">
+
+    <!-- Etiqueta y campo de entrada para el primer nombre -->
+    <label for="first_name">First Name:</label>
+    <input type="text" id="first_name" name="first_name" required>
+    <br>
+
+    <!-- Etiqueta y campo de entrada para el apellido -->
+    <label for="last_name">Last Name:</label>
+    <input type="text" id="last_name" name="last_name" required>
+    <br>
+
+    <!-- Etiqueta y campo de entrada para el email -->
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <br>
+
+    <!-- Etiqueta y campo de entrada para la contraseña -->
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" required>
+    <br>
+
+    <!-- Etiqueta y campo de entrada para la edad -->
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" required>
+    <br>
+
+    <!-- Botón de envío del formulario para registrar -->
+    <button type="submit">Register</button>
+</form>

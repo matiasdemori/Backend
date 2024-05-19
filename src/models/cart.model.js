@@ -8,7 +8,7 @@ const cartSchema = new mongoose.Schema({
             // Producto en el carrito referenciado por su ID en la colección "Product"
             product: {
                 type: mongoose.Schema.Types.ObjectId, // Tipo de dato para el ID del producto
-                ref: "Product", // Referencia al modelo "Product"
+                ref: "ProductModel", // Referencia al modelo "Product"
                 required: true // Campo requerido
             },
             // Cantidad del producto en el carrito
@@ -23,7 +23,7 @@ const cartSchema = new mongoose.Schema({
 //Middleware de pre, se ejecuta antes de realizar una consulta 'findOne' en el esquema de carrito
  cartSchema.pre('findOne', function (next) {
     // Puebla automáticamente el campo 'products.product' del carrito con solo el '_id', 'title' y 'price' del producto asociado
-    this.populate('products.product', '_id title price');
+    this.populate('products.product');
      next(); // Llamo a la función next para continuar con la ejecución
  });
 

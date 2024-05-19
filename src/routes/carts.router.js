@@ -7,6 +7,9 @@ const CartManager = require("../controllers/cart-manager.js");
 // Creo una instancia de CartManager 
 const cartManager = new CartManager();
 
+//Importo el modelo del cart
+const CartModel = require("../models/cart.model.js");
+
 // 1) Ruta para crear un nuevo carrito.
 router.post("/carts", async (req, res) => {
     try {
@@ -31,6 +34,12 @@ router.get("/carts/:cid", async (req, res) => {
     try {
         // Llamo al método getCarritoById de CartManager para obtener el carrito por su ID.
         const carrito = await cartManager.getCarritoById(cartId);
+
+        // Si el carrito no existe, devuelvo un mensaje de error.
+        if (!carrito) {
+            console.log("There is no such cart with the id");
+            return res.status(404).json({ error: "Cart not found" });
+        }
 
         // Devuelvo los productos del carrito como respuesta en formato JSON.
         res.json(carrito.products);

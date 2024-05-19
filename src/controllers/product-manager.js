@@ -3,7 +3,7 @@ const ProductModel = require("../models/product.model.js");
 
 class ProductManager {
 
-    async addProduct(title, description, price, img, code, stock, category, thumbnails) {
+    async addProduct({ title, description, price, img, code, stock, category, thumbnails }) {
         try { //Se utiliza para manejar errores potenciales que pueden ocurrir durante la ejecución del código dentro de este bloque.
             // Verifico que todos los campos obligatorios estén presentes
             if (!title || !description || !price || !code || !stock || !category) {
@@ -21,7 +21,7 @@ class ProductManager {
             }
 
             // Creo un nuevo producto con los datos proporcionados
-            const nuevoProducto = new ProductModel({
+            const newProduct = new ProductModel({
                 title,
                 description,
                 price,
@@ -34,7 +34,7 @@ class ProductManager {
             });
 
             // Guardo el nuevo producto en la base de datos
-            await nuevoProducto.save();
+            await newProduct.save();
 
         } catch (error) {
             // Capturo cualquier error que ocurra durante la ejecución del código dentro del bloque try
@@ -46,6 +46,7 @@ class ProductManager {
 
     async getProducts({ limit = 10, page = 1, sort, query } = {}) {
         try {
+            console.log('Received parameters:', { limit, page, sort, query });
             // Calculo el número de documentos a omitir según la página y el límite de resultados por página
             const skip = (page - 1) * limit;
 
@@ -59,14 +60,18 @@ class ProductManager {
 
             // Opciones de ordenamiento inicialmente vacías
             const sortOptions = {};
-            if (sort) {
-                // Configuro las opciones de ordenamiento según el parámetro de orden (ascendente o descendente)
-                if (sort === 'asc' || sort === 'desc') {
-                    sortOptions.price = sort === 'asc' ? 1 : -1; // Ordeno por precio ascendente (1) o descendente (-1)
-                }
+
+            // Verifico si se proporcionó un valor válido para sort y configuro las opciones de ordenamiento
+            if (sort === 'asc') {
+                sortOptions.price = 1; // Orden ascendente por precio
+            } else if (sort === 'desc') {
+                sortOptions.price = -1; // Orden descendente por precio
+            } else if (sort) {
+                throw new Error("Invalid sort parameter. Sort must be 'asc' or 'desc'.");
             }
 
             // Obtengo los productos según las opciones de consulta, ordenamiento, paginación y límite
+
             const productos = await ProductModel
                 .find(queryOptions)
                 .sort(sortOptions)
@@ -95,7 +100,6 @@ class ProductManager {
                 prevLink: hasPrevPage ? `/api/products?limit=${limit}&page=${page - 1}&sort=${sort}&query=${query}` : null, // Enlace a la página previa (si existe)
                 nextLink: hasNextPage ? `/api/products?limit=${limit}&page=${page + 1}&sort=${sort}&query=${query}` : null, // Enlace a la página siguiente (si existe)
             };
-
         } catch (error) {
             // Manejo errores en caso de fallo en la consulta
             console.log("Error obtaining the products", error);

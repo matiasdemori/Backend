@@ -1,0 +1,14 @@
+<!-- Título de la página de perfil -->
+<h1>Mi Perfil</h1>
+
+<!-- Mensaje de bienvenida mostrando el nombre completo del usuario -->
+<p>Bienvenido!, {{user.first_name}} {{user.last_name}}!</p>
+
+<!-- Muestro el email del usuario -->
+<p>Email: {{user.email}}</p>
+
+<!-- Muestro la edad del usuario -->
+<p>Edad: {{user.age}}</p>
+
+<!-- Enlace para cerrar sesión -->
+<a href="/api/sessions/logout">Logout</a>
