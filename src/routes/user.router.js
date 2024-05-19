@@ -40,3 +40,5 @@ router.post("/", async (req, res) => {
         res.status(500).send({ error: "Error interno del servidor" });
     }
 });
+
+module.exports = router; 

@@ -27,6 +27,9 @@ app.use(session({
     resave: true,
     // Guardo una nueva sesión aunque no esté inicializada
     saveUninitialized: true,
+    store: MongoStore.create({
+        mongoUrl: "mongodb+srv://matiasdemori:coderhouse@cluster0.crxzscd.mongodb.net/Ecommerce?retryWrites=true&w=majority&appName=Cluster0", ttl: 100
+    })
 }))
 
 // Importación de express-handlebars y configuración
