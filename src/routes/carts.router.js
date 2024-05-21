@@ -11,7 +11,7 @@ const cartManager = new CartManager();
 const CartModel = require("../models/cart.model.js");
 
 // 1) Ruta para crear un nuevo carrito.
-router.post("/carts", async (req, res) => {
+router.post("/", async (req, res) => {
     try {
         // Llamo al método para crear un nuevo carrito.
         const nuevoCarrito = await cartManager.crearCarrito();
@@ -27,7 +27,7 @@ router.post("/carts", async (req, res) => {
 
 
 // 2) Ruta para obtener los productos de un carrito específico.
-router.get("/carts/:cid", async (req, res) => {
+router.get("/:cid", async (req, res) => {
     // Obtengo el ID del carrito desde los parámetros de la solicitud.
     const cartId = req.params.cid;
 
@@ -52,7 +52,7 @@ router.get("/carts/:cid", async (req, res) => {
 
 
 // 3) Ruta para agregar productos a un carrito.
-router.post("/carts/:cid/product/:pid", async (req, res) => {
+router.post("/:cid/product/:pid", async (req, res) => {
     // Obtengo el ID del carrito y el ID del producto desde los parámetros de la solicitud.
     const cartId = req.params.cid;
     const productId = req.params.pid;
@@ -80,7 +80,7 @@ router.post("/carts/:cid/product/:pid", async (req, res) => {
 
 
 //4) Ruta para eliminar un producto especifico del carrito: 
-router.delete('/carts/:cid/product/:pid', async (req, res) => {
+router.delete('/:cid/product/:pid', async (req, res) => {
     try {
         // Obtengo el ID del carrito y el ID del producto de los parámetros de la solicitud
         const cartId = req.params.cid;
@@ -108,7 +108,7 @@ router.delete('/carts/:cid/product/:pid', async (req, res) => {
 
 
 //5) Ruta para actualizar los productos del carrito: 
-router.put('/carts/:cid', async (req, res) => {
+router.put('/:cid', async (req, res) => {
     const cartId = req.params.cid; // Obtengo el ID del carrito desde los parámetros de la solicitud
     const updatedProducts = req.body; // Obtengo los productos actualizados desde el cuerpo de la solicitud
 
@@ -130,7 +130,7 @@ router.put('/carts/:cid', async (req, res) => {
 
 
 //6) Ruta para actualizar las cantidades de los productos
-router.put('/carts/:cid/product/:pid', async (req, res) => {
+router.put('/:cid/product/:pid', async (req, res) => {
     try {
         // Obtengo el ID del carrito y el ID del producto desde los parámetros de la solicitud
         const cartId = req.params.cid;
@@ -159,7 +159,7 @@ router.put('/carts/:cid/product/:pid', async (req, res) => {
 
 
 //7) Ruta para vaciar el carrito: 
-router.delete('/carts/:cid', async (req, res) => {
+router.delete('/:cid', async (req, res) => {
     try {
         // Obtengo el ID del carrito desde los parámetros de la solicitud
         const cartId = req.params.cid;

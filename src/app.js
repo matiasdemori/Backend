@@ -3,6 +3,7 @@ const fs = require('fs').promises;
 const exphbs = require("express-handlebars"); 
 const socket = require("socket.io"); 
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 require("./database.js");
 
 const productsRouter = require("./routes/products.router.js");

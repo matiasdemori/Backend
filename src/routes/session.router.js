@@ -20,7 +20,7 @@ router.post("/login", async (req, res) => {
         if (usuario) {
             // Verifico si la contraseña proporcionada es válida usando isValidPassword
             if (isValidPassword(password, usuario)) {
-                // Establesco las variables de sesión para el usuario autenticado
+                // Establezco las variables de sesión para el usuario autenticado
                 req.session.login = true;
                 req.session.user = {
                     email: usuario.email,
@@ -45,15 +45,6 @@ router.post("/login", async (req, res) => {
     }
 });
 
-//Logout: 
-// Ruta GET para manejar la salida de los usuarios
-router.get("/logout", (req, res) => {
-    // Verifico si el usuario está autenticado antes de destruir la sesión
-    if (req.session.login) {
-        req.session.destroy();
-    }
-    // Redirijo al usuario a la página de inicio de sesión después de salir
-    res.redirect("/login");
-});
 
-module.exports = router; 
+module.exports = router;
+

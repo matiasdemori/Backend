@@ -1,5 +1,6 @@
 //Importo el modelo del CartModel 
 const CartModel = require("../models/cart.model.js");
+const mongoose = require('mongoose');
 
 //Defino unca clase llamada CartManager, que contendrá métodos para gestionar y manipular los carritos en la aplicación.
 class CartManager {
@@ -61,14 +62,14 @@ class CartManager {
             const carrito = await this.getCarritoById(cartId);
 
             // Verifico si el producto ya existe en el carrito
-            const existeProducto = carrito.products.find(item => item.product.toString() === productId);
+            const existeProducto = carrito.products.find(item => item.product.equals(new mongoose.Types.ObjectId(productId)));
 
             // Si el producto ya existe en el carrito, incremento la cantidad
             if (existeProducto) {
                 existeProducto.quantity += quantity;
             } else {
                 // Si el producto no existe, lo agrego al carrito con la cantidad especificada
-                carrito.products.push({ product: productId, quantity });
+                carrito.products.push({ product: new mongoose.Types.ObjectId(productId), quantity });
             }
 
             // Marco la propiedad "products" como modificada

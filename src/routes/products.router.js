@@ -8,10 +8,10 @@ const ProductManager = require("../controllers/product-manager.js");
 const productManager = new ProductManager();
 
 // 1) Ruta para obtener productos con opciones de paginación, ordenamiento y búsqueda
-router.get("/products", async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         // Obtengo los parámetros de la consulta (query string) de la solicitud
-        const { limit = 10, page = 1, sort, query } = req.query;
+        const { limit = 10, page = 1, sort = "", query = "" } = req.query;
         // Llamo al método getProducts del gestor de productos para obtener los productos con las opciones especificadas
         const productos = await productManager.getProducts({
             limit: parseInt(limit), // Convierto el límite de resultados a un número entero
@@ -23,7 +23,7 @@ router.get("/products", async (req, res) => {
         // Devuelvo una respuesta JSON con los productos obtenidos y metadatos de paginación
         res.json({
             status: 'success',
-            payload: productos, // Productos obtenidos
+            payload: productos.docs, // Productos obtenidos
             totalPages: productos.totalPages, // Número total de páginas de resultados
             prevPage: productos.prevPage, // Página anterior si está disponible
             nextPage: productos.nextPage, // Página siguiente si está disponible
@@ -46,7 +46,7 @@ router.get("/products", async (req, res) => {
 
 
 // 2) Ruta para obtener un producto por su ID
-router.get('/products/:pid', async (req, res) => {
+router.get('/:pid', async (req, res) => {
     try {
         const pid = req.params.pid; // Obtengo el product ID de req.params
         const product = await productManager.getProductById(pid); // Obtengo el producto por su ID
@@ -63,13 +63,13 @@ router.get('/products/:pid', async (req, res) => {
 });
 
 // 3) Ruta para agregar un nuevo producto
-router.post("/products", async (req, res) => {
+router.post("/", async (req, res) => {
     const nuevoProducto = req.body; // Obtengo el nuevo producto del body
 
     const { title, description, price, img, code, stock, category, thumbnails } = nuevoProducto; // Desestructuro el objeto para obtener cada propiedad
-
+    
     try {
-        await productManager.addProduct(title, description, price, img, code, stock, category, thumbnails); // Paso cada propiedad por separado a addProduct
+    await productManager.addProduct({title, description, price, img, code, stock, category, thumbnails}); // Paso cada propiedad por separado a addProduct
         res.status(201).json({ message: "Product added successfully" }); // Si todo sale bien mando un ok.
     } catch (error) {
         res.status(400).json({ error: error.message }); // Capturo y envio el mensaje de error al cliente en Postman
@@ -77,7 +77,7 @@ router.post("/products", async (req, res) => {
 })
 
 // 4) Ruta para actualizar por ID
-router.put("/products/:pid", async (req, res) => {
+router.put("/:pid", async (req, res) => {
     const id = req.params.pid; // Obtengo como parametro el ID a modificar
     const productoActualizado = req.body; // Obtengo del body los datos del producto a actualizar.
 
@@ -92,7 +92,7 @@ router.put("/products/:pid", async (req, res) => {
 })
 
 // Ruta para eliminar un producto:
-router.delete("/products/:pid", async (req, res) => {
+router.delete("/:pid", async (req, res) => {
     const id = req.params.pid; // Obtengo por parámetro el id a eliminar
 
     try {
@@ -104,4 +104,6 @@ router.delete("/products/:pid", async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 })
+
+
 module.exports = router;

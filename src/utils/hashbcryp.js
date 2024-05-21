@@ -1,22 +1,19 @@
-// Importo el módulo bcrypt para el hashing de contraseñas
 const bcrypt = require("bcrypt");
 
-// Con esta funcion genero un hash a partir de una contraseña
-const createHash = password => {
-    // Genero una sal con un nivel de fortaleza de 10
-    const salt = bcrypt.genSaltSync(10);
-    // Genero el hash sincrónicamente y devuelve el resultado
-    return bcrypt.hashSync(password, salt);
+// Función asíncrona para crear un hash a partir de una contraseña
+const createHash = async (password) => {
+    // Genera un salt con un factor de costo de 10
+    const salt = await bcrypt.genSalt(10);
+    // Genera el hash de la contraseña usando el salt generado
+    const hash = await bcrypt.hash(password, salt);
+    return hash;
 };
 
-// Función para verificar si una contraseña es válida
-const isValidPassword = (password, hashedPassword) => {
-    // Comparo la contraseña proporcionada con el hash almacenado
-    return bcrypt.compareSync(password, hashedPassword);
+// Función asíncrona para verificar si la contraseña proporcionada coincide con el hash almacenado en el usuario
+const isValidPassword = async (password, user) => {
+    // Compara la contraseña proporcionada con el hash almacenado en el campo 'password' del usuario
+    const match = await bcrypt.compare(password, user.password);
+    return match;
 };
 
-// Exporto las funciones para que puedan ser utilizadas en otros módulos
-module.exports = {
-    createHash,
-    isValidPassword
-};
+module.exports = { createHash, isValidPassword };

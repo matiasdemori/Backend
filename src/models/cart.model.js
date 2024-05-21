@@ -8,7 +8,7 @@ const cartSchema = new mongoose.Schema({
             // Producto en el carrito referenciado por su ID en la colección "Product"
             product: {
                 type: mongoose.Schema.Types.ObjectId, // Tipo de dato para el ID del producto
-                ref: "ProductModel", // Referencia al modelo "Product"
+                ref: "products", // Referencia al modelo "Product"
                 required: true // Campo requerido
             },
             // Cantidad del producto en el carrito

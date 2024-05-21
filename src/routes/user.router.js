@@ -21,12 +21,14 @@ router.post("/", async (req, res) => {
             return res.status(400).send({ error: "Email is already registered" });
         }
 
+        // Hashea la contraseña antes de crear el nuevo usuario
+        const hashedPassword = await createHash(password);
+
         // Defino el rol del usuario (puede ser "admin" o "usuario" dependiendo del correo electrónico)
-        const role = email === 'admincoder@coder.com' ? 'admin' : 'usuario';
+        const role = email === 'adminCoder@coder.com' ? 'admin' : 'usuario';
 
         // Creo un nuevo usuario en la base de datos utilizando UserModel.create
-        const newUser = await UserModel.create({ first_name, last_name, email, password: createHash(password), age, role });
-
+        const newUser = await UserModel.create({ first_name, last_name, email, password: hashedPassword, age, role });
         // Almaceno información del usuario en la sesión para mantenerlo autenticado
         req.session.login = true;
         req.session.user = { ...newUser._doc };

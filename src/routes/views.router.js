@@ -9,19 +9,20 @@ const productManager = new ProductManager("./src/models/products.json");
 const CartManager = require("../controllers/cart-manager.js");
 const cartManager = new CartManager();
 
-
 // 1) Ruta para obtener productos con opciones de paginación
 router.get("/products", async (req, res) => {
     try {
         // Obtengo los parámetros de paginación de la consulta (query string) de la solicitud
-        const { page = 1, limit = 2 } = req.query;
+        const { limit = 10, page = 1, sort = "", query = "" } = req.query;
 
         // Obtengo los productos del gestor de productos con las opciones de paginación especificadas
         const productos = await productManager.getProducts({
+            limit: parseInt(limit), // Convierto el límite de resultados a un número entero
             page: parseInt(page), // Convierto el número de página a un número entero
-            limit: parseInt(limit) // Convierto el límite de productos por página a un número entero
+            sort, // Ordeno la clasificación de los resultados
+            query, // Parámetro de búsqueda opcional
         });
-        
+
         // Creo un nuevo array de productos sin el campo _id utilizando el método map y destructuring
         const nuevoArray = productos.docs.map(producto => {
             const { _id, ...rest } = producto.toObject(); // Extraigo el _id y el resto de las propiedades del producto
@@ -36,11 +37,12 @@ router.get("/products", async (req, res) => {
             prevPage: productos.prevPage, // Número de página anterior si está disponible
             nextPage: productos.nextPage, // Número de página siguiente si está disponible
             currentPage: productos.page, // Número de página actual
-            totalPages: productos.totalPages // Número total de páginas de resultados
+            totalPages: productos.totalPages, // Número total de páginas de resultados
+            user: req.session.user // Agregar el usuario a la plantilla
         });
 
     } catch (error) {
-        // Capturo y manejar errores en caso de que ocurra algún problema al obtener productos
+        // Capturo y manejo errores en caso de que ocurra algún problema al obtener productos
         console.error("Error getting products", error);
         res.status(500).json({
             status: 'error',
@@ -48,7 +50,6 @@ router.get("/products", async (req, res) => {
         });
     }
 });
-
 
 // 2) Ruta para obtener los productos de un carrito específico por su ID
 router.get("/carts/:cid", async (req, res) => {
@@ -128,6 +129,24 @@ router.get("/profile", (req, res) => {
     // Renderizo la vista de perfil con los datos del usuario
     res.render("profile", { user: req.session.user });
 });
+
+// Logout:
+// Ruta GET para manejar la salida de los usuarios
+router.get("/logout", (req, res) => {
+    // Obtén el nombre del usuario desde la sesión
+    const userName = req.session.user ? req.session.user.first_name : "Usuario";
+
+    // Destruye la sesión
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ error: "Error al cerrar sesión" });
+        }
+
+        // Renderiza la vista de logout con el nombre del usuario
+        res.render("logout", { user: { name: userName } });
+    });
+});
+
 
 // Exporto el enrutador para ser utilizado en la aplicación principal
 module.exports = router;
