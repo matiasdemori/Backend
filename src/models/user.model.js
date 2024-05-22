@@ -12,7 +12,7 @@ const userSchema = mongoose.Schema({
     // Campo para el apellido del usuario
     last_name: {
         type: String, 
-        required: true
+        //required: true
     },
 
     // Campo para el email del usuario
@@ -26,13 +26,13 @@ const userSchema = mongoose.Schema({
     // Campo para la contraseña del usuario
     password: {
         type: String, 
-        required: true 
+        //required: true 
     },
 
     // Campo para la edad del usuario
     age: {
         type: Number, 
-        required: true 
+        //required: true 
     },
 
     // Campo para el rol del usuario

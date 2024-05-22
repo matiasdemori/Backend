@@ -4,11 +4,11 @@ const express = require("express");
 // Creo un nuevo enrutador utilizando express.Router()
 const router = express.Router();
 
-// Importa el modelo de usuario 
+// Importo el modelo de usuario 
 const UserModel = require("../models/user.model.js");
 
-// Importa la función createHash 
-const { createHash } = require("../utils/hashbcryp.js");
+// Importo la función createHash 
+const { createHash } = require("../utils/hashbcrypt.js");
 
 router.post("/", async (req, res) => {
     // Ruta POST para manejar la creación de usuarios
@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
             return res.status(400).send({ error: "Email is already registered" });
         }
 
-        // Hashea la contraseña antes de crear el nuevo usuario
+        // Hasheo la contraseña antes de crear el nuevo usuario
         const hashedPassword = await createHash(password);
 
         // Defino el rol del usuario (puede ser "admin" o "usuario" dependiendo del correo electrónico)

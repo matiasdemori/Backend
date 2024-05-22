@@ -130,23 +130,6 @@ router.get("/profile", (req, res) => {
     res.render("profile", { user: req.session.user });
 });
 
-// Logout:
-// Ruta GET para manejar la salida de los usuarios
-router.get("/logout", (req, res) => {
-    // Obtén el nombre del usuario desde la sesión
-    const userName = req.session.user ? req.session.user.first_name : "Usuario";
-
-    // Destruye la sesión
-    req.session.destroy(err => {
-        if (err) {
-            return res.status(500).json({ error: "Error al cerrar sesión" });
-        }
-
-        // Renderiza la vista de logout con el nombre del usuario
-        res.render("logout", { user: { name: userName } });
-    });
-});
-
 
 // Exporto el enrutador para ser utilizado en la aplicación principal
 module.exports = router;

@@ -4,6 +4,7 @@ const exphbs = require("express-handlebars");
 const socket = require("socket.io"); 
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
+const passport = require("passport");
 require("./database.js");
 
 const productsRouter = require("./routes/products.router.js");
@@ -11,6 +12,7 @@ const cartsRouter = require("./routes/carts.router.js");
 const viewsRouter = require("./routes/views.router.js");
 const sessionRouter = require("./routes/session.router.js");
 const userRouter = require("./routes/user.router.js");
+const initializePassport = require("./config/passport.config.js");
 
 const app = express(); // Creo una nueva instancia de la aplicación express
 const PORT = 8080; // Coloco el puerto donde se alojara el servidor
@@ -59,6 +61,13 @@ app.use("/api/carts", cartsRouter);
 app.use("/api/users", userRouter);
 app.use("/api/sessions", sessionRouter);
 app.use("/", viewsRouter);
+
+// Inicializo Passport y su middleware 
+app.use(passport.initialize());
+// Middleware para la gestión de sesiones de Passport
+app.use(passport.session());
+// Inicializo las estrategias de autenticación de Passport
+initializePassport(); 
 
 // Inicio el servidor y escuchar en el puerto definido
 const httpServer = app.listen(PORT, () => {

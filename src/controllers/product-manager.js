@@ -47,7 +47,6 @@ class ProductManager {
 
     async getProducts({ limit = 10, page = 1, sort = "", query = "" } = {}) {
     try {
-        console.log('Received parameters:', { limit, page, sort, query });
         // Calculo el número de documentos a omitir según la página y el límite de resultados por página
         const skip = (page - 1) * limit;
 
