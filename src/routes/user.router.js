@@ -29,12 +29,10 @@ router.post("/", async (req, res) => {
 
         // Creo un nuevo usuario en la base de datos utilizando UserModel.create
         const newUser = await UserModel.create({ first_name, last_name, email, password: hashedPassword, age, role });
-        // Almaceno información del usuario en la sesión para mantenerlo autenticado
-        req.session.login = true;
         req.session.user = { ...newUser._doc };
 
-        // Redirijo al usuario a la página de productos después de crear la cuenta exitosamente
-        res.redirect("/products");
+        // Redirijo al usuario a la página de login después de crear la cuenta exitosamente
+        res.redirect("/login");
 
     } catch (error) {
         // Manejo cualquier error que pueda ocurrir durante la creación del usuario
