@@ -1,6 +1,10 @@
 //Inicializo una conexión de socket.io entre el cliente y el servidor. 
 const socket = io();
 
+// Obtengo el rol y el email del usuario
+const role = document.getElementById("role").textContent;
+const email = document.getElementById("email").textContent;
+
 //Escucho el evento "productos" del servidor. Cuando se recibe el evento, llamo a la función renderProductos con los datos recibidos del servidor.
 socket.on("productos", (data) => {
     renderProductos(data);
@@ -22,6 +26,8 @@ const renderProductos = (data) => {
         productos.forEach(item => {
             //Creo un nuevo elemento div para cada producto.
             const card = document.createElement("div");
+            card.classList.add("card");
+            
             // Establezco el HTML interno de la tarjeta del producto utilizando una plantilla de cadena de texto.
             card.innerHTML = `
                 <p> ID: ${item._id} </p>
@@ -29,19 +35,29 @@ const renderProductos = (data) => {
                 <p> Precio: ${item.price} </p>
                 <button> Eliminar producto </button>
             `;
+
+            //Agrego la tarjeta al contenedor de productos.
             contenedorProductos.appendChild(card);
 
-            //Agregamos el evento al botón de eliminar producto: 
-            //Agrego un evento de clic al botón de "Eliminar producto".
+            // Cuando se hace clic en el botón de eliminar producto, se elimina el producto correspondiente.
             card.querySelector("button").addEventListener("click", () => {
-                eliminarProducto(item._id)
+                // Verifico el rol y el email del usuario
+                if (role === "premium" && item.owner === email) {
+                    eliminarProducto(item._id);
+                } else if (role === "admin") {
+                    eliminarProducto(item._id);
+                } else {
+                    // Si el usuario no es admin ni premium, muestra un mensaje de error
+                    Swal.fire({
+                        title: "Error",
+                        text: "No tenes permiso para borrar ese producto",
+                    })
+
+                }
             })
         });
-    } else {
-        console.error("Error: El objeto de productos recibido no tiene la estructura esperada");
     }
 }
-
 
 //Eliminar producto: 
 const eliminarProducto = (_id) => {
@@ -53,7 +69,9 @@ document.getElementById("btnEnviar").addEventListener("click", () => {
     agregarProducto();
 })
 
+//Función para agregar un nuevo producto
 const agregarProducto = () => {
+    // Obtengo los valores de los campos de entrada
     const producto = {
         title: document.getElementById("title").value,
         description: document.getElementById("description").value,
@@ -65,5 +83,7 @@ const agregarProducto = () => {
         thumbnails: document.getElementById("thumbnails").value,
         status: document.getElementById("status").value === "true"
     };
+
+    // Envío el objeto de proyecto al servidor
     socket.emit("agregarProducto", producto);
 }

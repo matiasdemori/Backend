@@ -1,3 +1,4 @@
+// Importo el módulo Mongoose
 const mongoose = require("mongoose");
 
 // Defino el esquema del carrito
@@ -11,6 +12,7 @@ const cartSchema = new mongoose.Schema({
                 ref: "products", // Referencia al modelo "Product"
                 required: true // Campo requerido
             },
+            
             // Cantidad del producto en el carrito
             quantity: {
                 type: Number, // Tipo de dato 

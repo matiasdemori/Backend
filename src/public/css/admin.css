@@ -1,0 +1,64 @@
+/* Contenedor principal */
+.admin-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Encabezado */
+.admin-header {
+    font-size: 2em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Mensaje */
+.admin-message {
+    font-size: 1.2em;
+    margin-bottom: 40px;
+    color: #666;
+}
+
+/* Contenedor de acciones */
+.admin-actions {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+/* Botones */
+.admin-button {
+    padding: 10px 20px;
+    font-size: 1em;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.admin-button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos específicos para los botones */
+.delete-users {
+    background-color: #dc3545;
+}
+
+.delete-users:hover {
+    background-color: #c82333;
+}
+
+.delete-products {
+    background-color: #28a745;
+}
+
+.delete-products:hover {
+    background-color: #218838;
+}

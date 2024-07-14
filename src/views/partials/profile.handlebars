@@ -1,0 +1,32 @@
+{{!-- Cuerpo de la página de perfil --}}
+<h1>Mi Perfil</h1>
+
+<!-- Cuerpo del perfil del usuario -->
+<div class="profile-card">
+    <!-- Muestro el nombre completo del usuario -->
+    <p>Bienvenido, {{user.nombre}} {{user.apellido}}!</p>
+    <!-- Muestro el rol del usuario -->
+    <p>Rol: {{user.role}}</p>
+
+    <form action="/api/users/logout" method="POST">
+        <button class="btnMios" type="submit">Logout</button>
+    </form>
+
+    {{!-- Si el usuario es admin, muestro el enlace para modificar los productos --}}
+    {{#if this.isAdmin}}
+    <a class="btnMios" href="/realtimeproducts">Modificar Productos</a>
+    {{else}}
+
+    {{!-- Si el usuario es premium, muestro el enlace para el panel de premium--}}
+    {{#if this.isPremium}}
+    <a class="btnMios" href="/realtimeproducts">Panel Premium</a>
+    {{/if}}
+
+    {{!-- Enlaces para ver el carrito, la tienda y el chat --}}
+    <a class="btnMios" href="/chat">Chat en vivo</a>
+    <a class="btnMios" href="/products">Tienda</a>
+    <a class="btnMios" href="/carts">Ver mi carrito</a>
+</div>
+
+<!-- Importo el archivo CSS para el perfil -->
+<link rel="stylesheet" href="./css/profile.css">

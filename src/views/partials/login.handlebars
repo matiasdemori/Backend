@@ -2,21 +2,26 @@
 <h1>Login</h1>
 
 <!-- Formulario para enviar datos de inicio de sesión al servidor -->
-<form action="/api/sessions/login" method="POST">
+<form class="formulario" action="/api/sessions/login" method="POST">
     <!-- Etiqueta para el campo de email -->
     <label for="email">Email:</label>
     <!-- Campo de entrada para el email, requerido -->
-    <input type="email" id="email" name="email" required>
+    <input type="email" class="inputMessi" id="email" name="email" required>
     <br>
 
     <!-- Etiqueta para el campo de contraseña -->
     <label for="password">Password:</label>
     <!-- Campo de entrada para la contraseña, requerido -->
-    <input type="password" id="password" name="password" required>
+    <input type="password" class="inputMessi" id="password" name="password" required>
     <br>
 
     <!-- Botón de envío del formulario para iniciar sesión -->
-    <button type="submit">Login</button>
+    <button type="submit" class="btnMios">Login</button>
+
+    <!-- Enlace para redirigir a la página de olvidar contraseña de contraseña -->
+    <p>¿Olvidaste tu contraseña? <a href="/reset-password">Restablecer contraseña</a></p>
+
 </form>
 
+{{!-- Enlace para redirigir a la página de inicio de sesión con GitHub --}}
 <a href="/api/sessions/github"> GITHUB </a>

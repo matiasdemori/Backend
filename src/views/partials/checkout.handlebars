@@ -1,0 +1,19 @@
+{{!-- Contenedor para mostrar el formulario de checkout --}}
+<div class="formulario">
+    <h1>Checkout</h1>
+
+    {{!-- Cuerpo del formulario de checkout --}}
+    <p>¡Gracias por tu compra
+        <span>{{cliente}}</span>! El número de orden es: <span> {{numTicket}} </span>
+    </p>
+    <p> Te enviaremos un e-mail a
+        <span> {{email}} </span>
+        con toda la información de tu orden
+    </p>
+
+    {{!-- Botón para redirigir a la tienda --}}
+    <div class="grupo-btn">
+        <a class="btnMios noSub" href="/products">Tienda</a>
+        <a class="btnMios noSub" href="/api/users/profile">Mi Perfil</a>
+    </div>
+</div>

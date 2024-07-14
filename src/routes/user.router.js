@@ -1,44 +1,39 @@
 // Importo el módulo express para la creación de rutas
 const express = require("express");
-
 // Creo un nuevo enrutador utilizando express.Router()
 const router = express.Router();
 
-// Importo el modelo de usuario 
-const UserModel = require("../models/user.model.js");
+// Importo userController
+const UserController = require("../controllers/user.controller.js");
+// Genero una instancia de userController
+const userController = new UserController();
 
-// Importo la función createHash 
-const { createHash } = require("../utils/hashbcrypt.js");
+// Importo passport
+const passport = require("passport");
 
-router.post("/", async (req, res) => {
-    // Ruta POST para manejar la creación de usuarios
-    const { first_name, last_name, email, password, age } = req.body;
+// 1) Ruta para registrar un usuario
+router.post("/register", userController.register);
 
-    try {
-        // Verifico si el correo electrónico ya está registrado en la base de datos
-        const existingUser = await UserModel.findOne({ email: email });
-        if (existingUser) {
-            return res.status(400).send({ error: "Email is already registered" });
-        }
+// 2) Ruta para iniciar sesión
+router.post("/login", userController.login);
 
-        // Hasheo la contraseña antes de crear el nuevo usuario
-        const hashedPassword = await createHash(password);
+// 3) Ruta para obtener el perfil del usuario
+router.get("/profile", passport.authenticate("jwt", { session: false }), userController.profile);
 
-        // Defino el rol del usuario (puede ser "admin" o "usuario" dependiendo del correo electrónico)
-        const role = email === 'adminCoder@coder.com' ? 'admin' : 'usuario';
+// 4) Ruta para cerrar la sesión
+router.post("/logout", userController.logout.bind(userController));
 
-        // Creo un nuevo usuario en la base de datos utilizando UserModel.create
-        const newUser = await UserModel.create({ first_name, last_name, email, password: hashedPassword, age, role });
-        req.session.user = { ...newUser._doc };
+// 5) Ruta para obtener el rol del usuario
+router.get("/admin", passport.authenticate("jwt", { session: false }), userController.admin);
 
-        // Redirijo al usuario a la página de login después de crear la cuenta exitosamente
-        res.redirect("/login");
+// 6) Ruta para solicitar un cambio de contraseña de usuario
+router.post("/requestPasswordReset", userController.requestPasswordReset);
 
-    } catch (error) {
-        // Manejo cualquier error que pueda ocurrir durante la creación del usuario
-        console.error("Error al crear el usuario:", error);
-        res.status(500).send({ error: "Error interno del servidor" });
-    }
-});
+// 7) Ruta para restablecer la contraseña de usuario
+router.post('/reset-password', userController.resetPassword);
 
-module.exports = router; 
+// 8) Ruta para cambiar el rol de usuario
+router.put("/premium/:uid", userController.cambiarRolPremium);
+
+// Exportar el enrutador para su uso en la aplicación principal
+module.exports = router;

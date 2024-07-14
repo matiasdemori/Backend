@@ -1,3 +1,4 @@
+// Importo el módulo Mongoose
 const mongoose = require("mongoose");
 
 // Definio el esquema del mensaje
@@ -7,6 +8,7 @@ const messageSchema = new mongoose.Schema({
         type: String, // Tipo de dato para el nombre de usuario
         required: true // Campo requerido
     },
+    
     // Contenido del mensaje
     message: {
         type: String, // Tipo de dato para el contenido del mensaje

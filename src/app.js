@@ -1,26 +1,26 @@
+// Importo express
 const express = require('express');
-const fs = require('fs').promises;
+// Importo el módulo express-handlebars
 const exphbs = require("express-handlebars"); 
-const socket = require("socket.io"); 
+// Importo el modulo de sesiones
 const session = require("express-session");
+// Importo el modulo de Mongo
 const MongoStore = require("connect-mongo");
+// Importo el modulo passport
 const passport = require("passport");
+// Importo el modulo de cookie parser
+const cookieParser = require("cookie-parser");
+// Importo la conexion a la base de datos
 require("./database.js");
+// Importo el modulo de cors
+const cors = require("cors");
+// Importo el modulo de path
+const path = require('path');
 
-const productsRouter = require("./routes/products.router.js");
-const cartsRouter = require("./routes/carts.router.js");
-const viewsRouter = require("./routes/views.router.js");
-const sessionRouter = require("./routes/session.router.js");
-const userRouter = require("./routes/user.router.js");
-const initializePassport = require("./config/passport.config.js");
-
-const app = express(); // Creo una nueva instancia de la aplicación express
-const PORT = 8080; // Coloco el puerto donde se alojara el servidor
-
-// Middlewares para manejar el formato JSON, datos de formulario y otro para la carpeta estatica de public.
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static("./src/public"));
+// Creo una nueva instancia de la aplicación express
+const app = express();
+// Coloco el puerto donde se alojara el servidor
+const PORT = 8080; 
 
 // Middleware de sesiones en Express
 app.use(session({
@@ -33,7 +33,35 @@ app.use(session({
     store: MongoStore.create({
         mongoUrl: "mongodb+srv://matiasdemori:coderhouse@cluster0.crxzscd.mongodb.net/Ecommerce?retryWrites=true&w=majority&appName=Cluster0", ttl: 100
     })
-}))
+}));
+
+// Middleware para la gestión de cookies
+app.use(cookieParser());
+
+// Importo la configuración de Passport
+const initializePassport = require("./config/passport.config.js");
+
+// CONFIGURACION DE PASSPORT
+// Inicializo Passport y su middleware 
+app.use(passport.initialize());
+// Middleware para la gestión de sesiones de Passport
+app.use(passport.session());
+// Inicializo las estrategias de autenticación de Passport
+initializePassport(); 
+
+//MIDDLEWARES
+// Middlewares para manejar el formato JSON
+app.use(express.json());
+// Middlewares para manejar el formato URL-encoded
+app.use(express.urlencoded({ extended: true }));
+// Middlewares para la carpeta estatica de public
+app.use(express.static(path.join(__dirname, 'public')));
+// Middleware para la configuración de CORS
+app.use(cors());
+
+// MIDDLEWARES DE AUTENTICACIÓN
+const authMiddleware = require("./middleware/authmiddleware.js");
+app.use(authMiddleware);
 
 // Importación de express-handlebars y configuración
 const hbs = exphbs.create({
@@ -47,7 +75,7 @@ const hbs = exphbs.create({
   },
 });
 
-//Configuracion de Handlebars
+// CONFIGURACIÓN DE HANDLEBARS
 // Configuro el motor de plantillas Handlebars en Express 
 app.engine("handlebars", hbs.engine);
 // Establezco Handlebars como el motor de vistas que se utilizará para renderizar las plantillas
@@ -55,78 +83,26 @@ app.set("view engine", "handlebars");
 // Establezco la ubicación del directorio que contiene las vistas o plantillas a utilizar
 app.set("views", "./src/views");
 
-// Coloco las rutas para los endpoints de productos y carrito
+// Importo las rutas
+const productsRouter = require("./routes/products.router.js");
+const cartsRouter = require("./routes/carts.router.js");
+const viewsRouter = require("./routes/views.router.js");
+const userRouter = require("./routes/user.router.js");
+const sessionRouter = require("./routes/session.router.js");
+
+// RUTAS
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/users", userRouter);
 app.use("/api/sessions", sessionRouter);
 app.use("/", viewsRouter);
 
-// Inicializo Passport y su middleware 
-app.use(passport.initialize());
-// Middleware para la gestión de sesiones de Passport
-app.use(passport.session());
-// Inicializo las estrategias de autenticación de Passport
-initializePassport(); 
-
+// CONFIGURACIÓN DEL SERVIDOR
 // Inicio el servidor y escuchar en el puerto definido
 const httpServer = app.listen(PORT, () => {
     console.log(`Express server listening on port ${PORT}`);
 });
 
-
-/// Iniciar el servidor de socket.io con el servidor HTTP
-const io = socket(httpServer);
-
-//Obtengo el array de productos: 
-const ProductManager = require("./controllers/product-manager.js");
-const productManager = new ProductManager("./src/models/products.json");
-
-io.on("connection", async (socket) => {
-    console.log("Un cliente conectado");
-
-    //Envio el array de productos al cliente: 
-    socket.emit("productos", await productManager.getProducts());
-    
-    //Recibo el evento "eliminarProducto" desde el cliente: 
-    socket.on("eliminarProducto", async (_id) => {
-        try {
-            await productManager.deleteProduct(_id);
-            //Enviamos el array de productos actualizados: 
-            socket.emit("productos", await productManager.getProducts());
-        } catch (error) {
-            console.error("Error al eliminar producto:", error);
-        }
-    });
-
-    //Recibo el evento "agregarProducto" desde el cliente: 
-    socket.on("agregarProducto", async (producto) => {
-        try {
-            const { title, description, price, img, code, stock, category, thumbnails } = producto;
-            await productManager.addProduct(title, description, price, img, code, stock, category, thumbnails);
-            socket.emit("productos", await productManager.getProducts());
-        } catch (error) {
-            console.error("Error al agregar producto:", error);
-        }
-    });
-});
-
-// Manejo de mensajes en el chat del ecommerce
-const MessageModel = require("./models/message.model.js");
-
-io.on("connection", (socket) => {
-    console.log("Nuevo usuario conectado");
-
-    socket.on("message", async (data) => {
-        try {
-            // Guardo el mensaje en MongoDB
-            await MessageModel.create(data); // Corrección aquí
-
-            // Obtengo los mensajes de MongoDB y se los paso al cliente
-            const messages = await MessageModel.find();
-            socket.emit("message", messages);
-        } catch (error) {
-            console.error("Error al procesar mensaje:", error);
-        }
-    });
-});
+// CONFIGURACIÓN DE WEBSOCKET 
+const SocketManager = require("./sockets/socketmanager.js");
+new SocketManager(httpServer);

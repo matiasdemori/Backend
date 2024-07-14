@@ -16,4 +16,5 @@ const isValidPassword = async (password, user) => {
     return match;
 };
 
+// Exporto las dos funciones
 module.exports = { createHash, isValidPassword };

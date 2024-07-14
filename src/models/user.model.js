@@ -12,7 +12,7 @@ const userSchema = mongoose.Schema({
     // Campo para el apellido del usuario
     last_name: {
         type: String, 
-        //required: true
+        required: true
     },
 
     // Campo para el email del usuario
@@ -26,20 +26,26 @@ const userSchema = mongoose.Schema({
     // Campo para la contraseña del usuario
     password: {
         type: String, 
-        //required: true 
+        required: true 
     },
 
     // Campo para la edad del usuario
     age: {
         type: Number, 
-        //required: true 
+        required: true 
     },
 
     // Campo para el rol del usuario
     role: {
         type: String, 
-        enum: ['admin', 'usuario'], // Valores permitidos: 'admin', 'usuario'
+        enum: ['admin', 'usuario', 'premium'], // Valores permitidos: 'admin', 'usuario', 'premium'
         default: 'usuario' // Valor por defecto: 'usuario'
+    },
+
+    // Campo para el token de restablecimiento de contraseña
+    resetToken: {
+        token: String,
+        expiresAt: Date // Fecha de expiración del token
     }
 });
 

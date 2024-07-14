@@ -7,7 +7,7 @@ const router = express.Router();
 // Importo el modelo de usuario
 const UserModel = require("../models/user.model.js");
 // Importo la función isValidPassword 
-const { isValidPassword } = require("../utils/hashbcrypt.js");
+const { isValidPassword } = require("../utils/hashbcryp.js");
 
 const passport = require("passport"); 
 
@@ -33,7 +33,7 @@ router.post("/login", passport.authenticate("login", {
 
 // Enrutador para manejar la falla en el inicio de sesión
 router.get("/faillogin", async (req, res) => {
-    res.send("Fallo todo, vamos a morir"); // Envío un mensaje de error en caso de falla en el inicio de sesión
+    res.send("Error en en login"); // Envío un mensaje de error en caso de falla en el inicio de sesión
 });
 
 // Versión para GitHub

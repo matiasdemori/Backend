@@ -1,0 +1,77 @@
+{{#if user}}
+<!-- Verifico si hay un usuario autenticado -->
+<header>
+    <!-- Encabezado de bienvenida para el usuario -->
+    <!-- Muesto el nombre completo del usuario -->
+    <p>Bienvenido!, {{user.first_name}} {{user.last_name}}!</p>
+    <!-- Muestro el rol del usuario -->
+    <p>Rol: {{user.role}} </p>
+    <!-- Enlace para cerrar sesión -->
+    <a href="/api/sessions/logout">Logout</a>
+    <a href="/Profile">Profile</a>
+    <a href="/Chat">Chat</a>
+    <a href="/realtimeproducts">Agregar Productos</a>
+</header>
+
+{{else}}
+<!-- Si no hay usuario autenticado, muestro un mensaje o redirijo a la página de inicio de sesión -->
+<p>Por favor inicia sesión para acceder a esta sección.</p>
+<!-- Enlace para redirigir a la página de inicio de sesión -->
+<a href="/login">Iniciar Sesión</a>
+{{/if}}
+
+<hr>
+
+<!-- Cuerpo de la página de productos -->
+<div class="d-flex justify-content-center align-items-center">
+    <!-- Título de la página de productos -->
+    <h1 class="text-center">Productos</h1>
+    <!-- Enlace para ver el carrito -->
+    <a href="/carts/{{cartId}}" class="ms-5">
+        <i class="bi bi-cart cart-icon"></i>
+    </a>
+</div>
+
+{{!-- Contenedor para mostrar los productos --}}
+<div class="container">
+    <div class="row">
+        <!-- Itero sobre la lista de productos -->
+        {{#each productos}}
+        <div class="card col-xl-4 col-md-6 col-sm-12">
+            <img src="{{img}}" alt="" class="card-img-top">
+
+            <!-- Renderizo cada producto -->
+            <div class="card-body">
+                <!-- Muestro el título del producto -->
+                <h2 class="card-title">{{title}}</h2>
+                <!-- Muestro la descripción del producto -->
+                <p class="card-text">{{description}}</p>
+                <!-- Muestro el precio del producto -->
+                <p class="card-text">Price: ${{price}}</p>
+                <!-- Muestro la categoría del producto -->
+                <p class="card-text">Category: {{category}} </p>
+
+                <!-- Botón para agregar al carrito -->
+                <form action="/api/carts/{{../cartId}}/product/{{id}}" method="POST">
+                    <button class="btnMios" type="submit">Agregar al Carrito</button>
+                </form>
+
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+
+<!-- Paginación -->
+<div class="container mt-3">
+    <div class="row text-center">
+        <!-- Muestro los botones de paginación -->
+        {{#if hasPrevPage}}
+        <a href="/products?page={{prevPage}}"> Anterior </a>
+        {{/if}}
+        {{#if hasNextPage}}
+        <a href="/products?page={{nextPage}}"> Siguiente </a>
+        {{/if}}
+        <p>Pagina {{currentPage}} de {{totalPages}} </p>
+    </div>
+</div>

@@ -1,0 +1,37 @@
+<h1 class="titulo">Real Time Products</h1>
+<h2 class="subtitulo">Productos actualizados en tiempo real</h2>
+<h3 id="role">{{role}}</h3>
+<h3 id="email">{{email}}</h3>
+
+<!-- Contenedor para mostrar los productos en tiempo real -->
+<div id="contenedorProductos" class="contenedor"></div>
+
+<h2 class="subtitulo">Formulario para agregar productos</h2>
+
+<!-- Formulario para agregar productos -->
+<form class="formulario">
+    <input type="text" id="title" class="input" placeholder="Titulo"> 
+    <input type="text" id="description" class="input" placeholder="Descripcion"> 
+    <input type="number" id="price" class="input" placeholder="Precio">
+    <input type="text" id="img" class="input" value="Sin Imagen"> 
+    <input type="text" id="code" class="input" placeholder="Código"> 
+    <input type="number" id="stock" class="input" placeholder="Stock">
+    <input type="text" id="category" class="input" placeholder="Categoria"> 
+    <input type="text" id="thumbnails" class="input" value="thumbnails"> 
+    <select id="status" class="select"> <!-- Selector para el estado del producto (Activo/Inactivo) -->
+        <option value="true"> Activo </option>
+        <option value="false"> Inactivo </option>
+    </select>
+    <button type="button" id="btnEnviar" class="boton"> Enviar </button> 
+</form>
+
+<!-- Biblioteca de Socket.io para la comunicación en tiempo real -->
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+
+<!-- Script principal para manejar la lógica de la aplicación -->
+<script src="js/main.js"></script>
+
+<!-- Importo el archivo de css para Real Time Products -->
+<link rel="stylesheet" href="./css/realtimeproducts.css">
+
+
